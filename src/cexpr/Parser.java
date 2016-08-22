@@ -117,9 +117,10 @@ public class Parser {
         if (out.size() == 0){
             out.add(new ExprToken(ExprToken.TYPE.NUM_RE, 0.0));
         }
-        // single number
+        // single number/variable
         if (out.size() == 1 && (out.get(0).type == ExprToken.TYPE.NUM_IM
-                || out.get(0).type == ExprToken.TYPE.NUM_RE)) {
+                || out.get(0).type == ExprToken.TYPE.NUM_RE
+                || out.get(0).type == ExprToken.TYPE.IDENTIFIER)) {
             out.add(new ExprToken(ExprToken.TYPE.NUM_RE, 0.0));
             out.add(new ExprToken(ExprToken.TYPE.OPERATOR, '+'));
         }
