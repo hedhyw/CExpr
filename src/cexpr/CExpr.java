@@ -47,6 +47,7 @@ public class CExpr {
                 compiled.put("z", new Complex(0.5, 2));
                 Complex complex = compiled.execute();
                 System.out.printf("Example #1: " + complex.toString() + '\n');
+                System.out.printf(compiled.toString() + '\n');
                 // Example #1: -4.877351+17.481837i
             }
 
@@ -64,6 +65,7 @@ public class CExpr {
                  *  sqrt, exp, ln, log10
                  *  sin, cos, tan, ctan
                  *  asin, acos, atan
+                 *  sinh, cosh, tanh, ctanh
                  *  arg, abs, con, inv, round, rnd, im, re
                  */
                 String code = "tan(atan(0.234+PI*1i))";
