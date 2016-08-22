@@ -103,7 +103,7 @@ public class Lexical {
                 : ExprToken.TYPE.IDENTIFIER), val);
     }
 
-    private ExprToken.TYPE last_tok_type;
+    private ExprToken last_tok;
 
     public ExprToken next_token() throws CompileError {
         for (char chr; i < code.length(); i++) {
@@ -111,30 +111,29 @@ public class Lexical {
             if (IGNORING.contains(chr)) {
                 continue;
             } else if (OPERATORS.contains(chr)) {
-                if (last_tok_type == null || (last_tok_type != ExprToken.TYPE.NUM_IM
-                        && last_tok_type != ExprToken.TYPE.NUM_RE
-                        && last_tok_type != ExprToken.TYPE.IDENTIFIER)) {
+                if (last_tok == null
+                        || (last_tok.type == ExprToken.TYPE.OPERATOR
+                        && (char) last_tok.val != ')')) {
                     if (chr == '-') {
                         ++i;
                         ExprToken tok = number_token();
-                        last_tok_type = tok.type;
-                        return new ExprToken(tok.type, -(double) tok.val);
-                    }/* else if (chr != '(' && chr != ')') {
-                        throw new LexicalException("Unexpected token: " + chr);
-                    }*/
+                        last_tok = new ExprToken(tok.type, -(double) tok.val);
+                        return last_tok;
+                    }
                 }
-                last_tok_type = ExprToken.TYPE.OPERATOR;
-                return operator_token();
+                last_tok = operator_token();
+                return last_tok;
             } else if (Character.isDigit(chr)) {
-                last_tok_type = ExprToken.TYPE.NUM_IM;
-                return number_token();
+                last_tok = number_token();
+                return last_tok;
             } else if (Character.isLetter(chr)) {
-                last_tok_type = ExprToken.TYPE.IDENTIFIER;
-                return identifier_token();
+                last_tok = identifier_token();
+                return last_tok;
             } else {
                 throw new CompileError("Unexpected symbol: " + chr);
             }
         }
+        last_tok = null;
         return new ExprToken(ExprToken.TYPE.END, null);
     }
 }
