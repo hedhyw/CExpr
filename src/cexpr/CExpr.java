@@ -47,19 +47,31 @@ public class CExpr {
                 compiled.put("z", new Complex(0.5, 2));
                 Complex complex = compiled.execute();
                 System.out.printf("Example #1: " + complex.toString() + '\n');
-                // Example #1: 0.500000+6.000000i
+                // Example #1: -4.877351+17.481837i
             }
 
             { // default functions
-                // im(2+3i) = 0+3i
-                // re(4+5i) = 4+0i
-                // sin, cos, tan, ctan
-                String code = "cos(sin(tan(ctan(-1*PI))))+im(2+3i)+re(4+5i)";
+                /**
+                 * Description:
+                 *  im(2+3i)  = 0+3i
+                 *  re(4+5i)  = 4+0i
+                 *  inv(1+6i) = 6+1i
+                 *  con(7+8i) = 7-8i
+                 *  rnd(5+4i) = random()*5+random()*4
+                 *  round(5.5+4.123i) = 6+4i
+                 * 
+                 * List:
+                 *  sqrt, exp, ln, log10
+                 *  sin, cos, tan, ctan
+                 *  asin, acos, atan
+                 *  arg, abs, con, inv, round, rnd
+                 */
+                String code = "tan(atan(0.234+PI*1i))";
                 Compiled compiled = compiler.compile(code);
                 compiled.put("z", new Complex(0.5, 2));
                 Complex complex = compiled.execute();
                 System.out.printf("Example #2: " + complex.toString() + '\n');
-                // Example #2: 7.777554776899688
+                // Example #2: 0.234000+3.141593i
             }
 
             { // using constants
@@ -107,8 +119,13 @@ public class CExpr {
                 Complex complex = compiled.execute();
                 System.out.printf(complex.toString() + '\n');
                 /**
-                 * Example #6: r1 := cos [PI] r2 := ADD 2.0, 1.0 r3 := sin [E]
-                 * r4 := MUL r2, r3 r5 := ADD r1, r4 0.23234387150872648
+                 * Example #6:
+                 * r1 := cos [PI]
+                 * r2 := ADD 2.0, 1.0
+                 * r3 := sin [E]
+                 * r4 := MUL r2, r3
+                 * r5 := ADD r1, r4
+                 * 0.23234387150872648
                  */
             }
         } catch (CompileError ex) {
