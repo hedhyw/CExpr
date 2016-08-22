@@ -85,6 +85,79 @@ public class Functions extends HashMap<String, Functions.function> {
                 return new Complex(ComplexUtils.abs(arg), 0);
             }
         });
+        put("con", new function() {
+            @Override
+            public Complex eval(Complex arg) {
+                return ComplexUtils.conjugate(arg);
+            }
+        });
+        put("asin", new function() {
+            @Override
+            public Complex eval(Complex arg) {
+                return ComplexUtils.asin(arg);
+            }
+        });
+        put("acos", new function() {
+            @Override
+            public Complex eval(Complex arg) {
+                return ComplexUtils.acos(arg);
+            }
+        });
+        put("sqrt", new function() {
+            @Override
+            public Complex eval(Complex arg) {
+                return ComplexUtils.sqrt(arg);
+            }
+        });
+        put("atan", new function() {
+            @Override
+            public Complex eval(Complex arg) {
+                return ComplexUtils.atan(arg);
+            }
+        });
+        put("exp", new function() {
+            @Override
+            public Complex eval(Complex arg) {
+                return ComplexUtils.exp(arg);
+            }
+        });
+        put("ln", new function() {
+            @Override
+            public Complex eval(Complex arg) {
+                return ComplexUtils.ln(arg);
+            }
+        });
+        put("log10", new function() {
+            @Override
+            public Complex eval(Complex arg) {
+                return ComplexUtils.log10(arg);
+            }
+        });
+        put("arg", new function() {
+            @Override
+            public Complex eval(Complex arg) {
+                return new Complex(ComplexUtils.arg(arg), 0);
+            }
+        });
+        put("rnd", new function() {
+            @Override
+            public Complex eval(Complex arg) {
+                Complex rnd = ComplexUtils.random(arg);
+                return new Complex(rnd.re * arg.re, rnd.im * arg.im);
+            }
+        });
+        put("round", new function() {
+            @Override
+            public Complex eval(Complex arg) {
+                return ComplexUtils.round(arg);
+            }
+        });
+        put("inv", new function() {
+            @Override
+            public Complex eval(Complex arg) {
+                return new Complex(arg.im, arg.re);
+            }
+        });
     }
 
 }
