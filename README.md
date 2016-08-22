@@ -1,15 +1,23 @@
-# CExpr 0.2
+# CExpr 0.7
 Math Complex Expression Compiler
 
 # How to use?
 Complete example: **/cexpr/CExpr.java**
 
 ```java
-// 1 + 2i == Complex(1, 2i); 3 == Complex(3, 0)
-// -cos(z) - invalid; -1*cos(z) - valid
-// operators: +, -, *, /, %, ^
-// default functions: sin, cos, tan, ctan
-// default constants: PI, E
+/**
+  * 1 + 2i == Complex(1, 2i); 3 == Complex(3, 0)
+  * -cos(z), i - invalid; -1*cos(z), 1i - valid
+  * operators:
+  *   +, -, *, /, %, ^
+  * default functions:
+  *   sqrt, exp, ln, log10
+  *   sin, cos, tan, ctan
+  *   asin, acos, atan
+  *   arg, abs, con, inv, round, rnd, im, re
+  * default constants:
+  *   PI, E
+  */
 String code = "-1*cos(z)^2+(1+2i)*3";
 Compiled compiled = compiler.compile(code); // can throw CompileError
 compiled.put("z", new Complex(0.5, 2)); // puts custom variable `z`
