@@ -158,6 +158,30 @@ public class Functions extends HashMap<String, Functions.function> {
                 return new Complex(arg.im, arg.re);
             }
         });
+        put("sinh", new function() {
+            @Override
+            public Complex eval(Complex arg) {
+                return ComplexUtils.sinh(arg);
+            }
+        });
+        put("cosh", new function() {
+            @Override
+            public Complex eval(Complex arg) {
+                return ComplexUtils.cosh(arg);
+            }
+        });
+        put("tanh", new function() {
+            @Override
+            public Complex eval(Complex arg) {
+                return ComplexUtils.tanh(arg);
+            }
+        });
+        put("ctanh", new function() {
+            @Override
+            public Complex eval(Complex arg) {
+                return ComplexUtils.ctanh(arg);
+            }
+        });
     }
 
 }

@@ -90,13 +90,14 @@ public class Compiler {
         List<Command> cmds = new ArrayList<>();
         List<ExprToken> list = parser.get();
         List<ExprToken> new_list = new ArrayList<>();
-        int num_args = 0;
+        int num_args;
         int reg = 0;
         int last_size;
         while (list.size() != 1) {
             last_size = list.size();
             Iterator<ExprToken> it = list.iterator();
             ExprToken tok;
+            num_args = 0;
             while (it.hasNext()) {
                 tok = it.next();
                 if (tok.type == ExprToken.TYPE.NUM_IM
@@ -118,7 +119,7 @@ public class Compiler {
                     num_args = 0;
                 } else { // ExprToken.TYPE.OPERATOR
                     char operator = (char) tok.val;
-                    if (num_args >= 2) {
+                    if (num_args >= 2 && !(operator == 'm' || operator == 'p')) {
                         ExprToken tok1 = new_list.remove(new_list.size() - 1);
                         ExprToken tok0 = new_list.remove(new_list.size() - 1);
                         CmdVal val0 = convertVal(tok0), val1 = convertVal(tok1);
@@ -147,10 +148,27 @@ public class Compiler {
                         cmds.add(new Command(type, val0,
                                 val1, Character.toString(operator), ++reg));
                         new_list.add(new ExprToken(ExprToken.TYPE.REG, reg));
+                        num_args--;
+                    } else if (num_args >= 1 && operator == 'm') { // unary `-`
+                        ExprToken tok0 = new_list.remove(new_list.size() - 1);
+                        CmdVal val0 = convertVal(tok0),
+                                val1 = new CmdVal(new Complex(-1,0),
+                                        CmdVal.VAL_TYPE.NUM);
+                        cmds.add(new Command(Command.CMD.MUL, val0,
+                                val1, "*", ++reg));
+                        new_list.add(new ExprToken(ExprToken.TYPE.REG, reg));
+                    } else if (num_args >= 1 && operator == 'p') { // unary `+`
+                        ExprToken tok0 = new_list.remove(new_list.size() - 1);
+                        CmdVal val0 = convertVal(tok0),
+                                val1 = new CmdVal(new Complex(0,0),
+                                        CmdVal.VAL_TYPE.NUM);
+                        cmds.add(new Command(Command.CMD.ADD, val0,
+                                val1, "+", ++reg));
+                        new_list.add(new ExprToken(ExprToken.TYPE.REG, reg));
                     } else {
                         new_list.add(tok);
+                        num_args = 0;
                     }
-                    num_args = 0;
                 }
             }
 

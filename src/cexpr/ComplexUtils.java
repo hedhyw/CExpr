@@ -132,9 +132,27 @@ public class ComplexUtils {
         return new Complex(Math.round(c.re),
                 Math.round(c.im));
     }
-    
+
     public static Complex random(Complex c) {
-        return new Complex(Math.random(),Math.random());
+        return new Complex(Math.random(), Math.random());
+    }
+
+    public static Complex sinh(Complex c) {
+        return new Complex(Math.sinh(c.re) * Math.cos(c.im),
+                Math.cosh(c.re) * Math.sin(c.im));
+    }
+    
+    public static Complex cosh(Complex c) {
+        return new Complex(Math.cosh(c.re) * Math.cos(c.im),
+                Math.sinh(c.re) * Math.sin(c.im));
+    }
+    
+    public static Complex tanh(Complex c) {
+        return div(sinh(c), cosh(c));
+    }
+    
+    public static Complex ctanh(Complex c) {
+        return div(cosh(c), sinh(c));
     }
 
     public static double abs(Complex c) {

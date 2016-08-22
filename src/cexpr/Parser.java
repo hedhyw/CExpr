@@ -40,7 +40,9 @@ public class Parser {
     private static final HashMap<Character, Integer> OPERATOR_PRIORITY // for stack
             = new HashMap<Character, Integer>() {
         {
-            put('f', 4); // function
+            put('f', 5); // function
+            put('p', 4); // unary plus
+            put('m', 4); // unary minus
             put('(', 0); // for stack
             put(')', 0);
             put('^', 3);
@@ -60,6 +62,7 @@ public class Parser {
 
     public List<ExprToken> get() throws CompileError {
         ExprToken tok;
+        boolean unary = true;
         do {
             tok = lex.next_token();
             switch (tok.type) {
@@ -67,15 +70,21 @@ public class Parser {
                 case NUM_IM:
                 case IDENTIFIER:
                     out.add(tok);
+                    unary = false;
                     break;
                 case FUNCTION:
-
                 case OPERATOR:
                     char operator = (tok.type == ExprToken.TYPE.FUNCTION
                             ? 'f' : (Character) tok.val);
                     int priority = OPERATOR_PRIORITY.get(operator);
+                    if (unary && operator == '-')
+                        tok = new ExprToken(ExprToken.TYPE.OPERATOR, 'm'); // unary minus
+                    if (unary && operator == '+')
+                        tok = new ExprToken(ExprToken.TYPE.OPERATOR, 'p'); // unary plus
                     ExprToken top;
+                    unary = true;
                     if (operator == ')') {
+                        unary = false;
                         while (!stk.empty()) {
                             top = stk.pop();
                             if (top.type == ExprToken.TYPE.FUNCTION

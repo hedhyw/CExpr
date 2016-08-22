@@ -103,37 +103,21 @@ public class Lexical {
                 : ExprToken.TYPE.IDENTIFIER), val);
     }
 
-    private ExprToken last_tok;
-
     public ExprToken next_token() throws CompileError {
         for (char chr; i < code.length(); i++) {
             chr = code.charAt(i);
             if (IGNORING.contains(chr)) {
                 continue;
             } else if (OPERATORS.contains(chr)) {
-                if (last_tok == null
-                        || (last_tok.type == ExprToken.TYPE.OPERATOR
-                        && (char) last_tok.val != ')')) {
-                    if (chr == '-') {
-                        ++i;
-                        ExprToken tok = number_token();
-                        last_tok = new ExprToken(tok.type, -(double) tok.val);
-                        return last_tok;
-                    }
-                }
-                last_tok = operator_token();
-                return last_tok;
+                return operator_token();
             } else if (Character.isDigit(chr)) {
-                last_tok = number_token();
-                return last_tok;
+                return number_token();
             } else if (Character.isLetter(chr)) {
-                last_tok = identifier_token();
-                return last_tok;
+                return identifier_token();
             } else {
                 throw new CompileError("Unexpected symbol: " + chr);
             }
         }
-        last_tok = null;
         return new ExprToken(ExprToken.TYPE.END, null);
     }
 }
