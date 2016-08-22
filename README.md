@@ -22,7 +22,7 @@ String code = "-1*cos(z)^2+(1+2i)*3";
 Compiled compiled = compiler.compile(code); // can throw CompileError
 compiled.put("z", new Complex(0.5, 2)); // puts custom variable `z`
 // for custom functions, see: /cexpr/CExpr.java
-Complex complex = compiled.execute(); // result here
+Complex complex = compiled.execute(); // result here, can throw ExecuteError
 System.out.printf("Result: " + complex.toString());
 // Result: -4.877351+17.481837i
 ```
