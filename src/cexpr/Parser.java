@@ -41,11 +41,11 @@ public class Parser {
             = new HashMap<Character, Integer>() {
         {
             put('f', 5); // function
-            put('p', 4); // unary plus
-            put('m', 4); // unary minus
             put('(', 0); // for stack
             put(')', 0);
-            put('^', 3);
+            put('^', 4);
+            put('p', 3); // unary plus
+            put('m', 3); // unary minus
             put('*', 2);
             put('%', 2);
             put('/', 2);
