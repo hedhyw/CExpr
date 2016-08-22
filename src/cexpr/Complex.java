@@ -35,7 +35,12 @@ public class Complex {
         this.re = re;
         this.im = im;
     }
+    
+    public boolean equals(Complex c){
+        return (c.im == im && c.re == re);
+    }
 
+    @Override
     public String toString() {
         if (im == 0) {
             return String.valueOf(re);
