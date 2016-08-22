@@ -64,7 +64,7 @@ public class CExpr {
                  *  sqrt, exp, ln, log10
                  *  sin, cos, tan, ctan
                  *  asin, acos, atan
-                 *  arg, abs, con, inv, round, rnd
+                 *  arg, abs, con, inv, round, rnd, im, re
                  */
                 String code = "tan(atan(0.234+PI*1i))";
                 Compiled compiled = compiler.compile(code);
