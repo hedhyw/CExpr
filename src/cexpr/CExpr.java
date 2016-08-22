@@ -42,12 +42,11 @@ public class CExpr {
         Compiler compiler = new Compiler();
         try {
             { // all numbers are complex
-                String code = "-1*cos(z)^2+(1+2i)*3";
+                String code = "-cos(z)^2+(1+2i)*3";
                 Compiled compiled = compiler.compile(code);
                 compiled.put("z", new Complex(0.5, 2));
                 Complex complex = compiled.execute();
                 System.out.printf("Example #1: " + complex.toString() + '\n');
-                System.out.printf(compiled.toString() + '\n');
                 // Example #1: -4.877351+17.481837i
             }
 
