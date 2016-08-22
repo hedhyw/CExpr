@@ -1,4 +1,4 @@
-# CExpr 0.7
+# CExpr 0.8
 Math Complex Expression Compiler
 
 # How to use?
