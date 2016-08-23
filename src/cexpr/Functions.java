@@ -299,6 +299,17 @@ public class Functions extends HashMap<String, Functions.function> {
                 return true;
             }
         });
+        put("set", new function() {
+            @Override
+            public Complex eval(Complex arg) {
+                return arg;
+            }
+
+            @Override
+            public boolean optimize() {
+                return false;
+            }
+        });
     }
 
 }

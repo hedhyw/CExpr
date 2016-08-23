@@ -34,7 +34,14 @@ import java.util.List;
 public class Compiler {
 
     private Parser parser;
+    private Functions functions;
+    private Constants constants;
 
+    public Compiler(){
+        functions = new Functions();
+        constants = new Constants();
+    }
+    
     /**
      * it gets expression token value with type
      */
@@ -60,33 +67,32 @@ public class Compiler {
         }
         return new CmdVal(val, type);
     }
-
+    
     /**
-     * function adds default constants to variables of compiled code
-     */
-    private Compiled putConstants(Compiled compiled) {
-        compiled.put("PI", ComplexUtils.PI);
-        compiled.put("E", ComplexUtils.E);
-        return compiled;
+     * add custom functions
+     * @param functions custom functions
+    */
+    public void setFunctions(Functions functions){
+        this.functions = functions;
+    }
+    
+    /**
+     * add custom constants
+     * @param constants custom constants
+    */
+    public void setConstants(Constants constants){
+        this.constants = constants;
     }
 
     /**
-     * @param code the text of expression
-     * @throws CompileError parser & compiler error
-     * @return HashMap with variables
-     */
-    public Compiled compile(String code) throws CompileError {
-        return compile(code, new Functions()); // includes only default functions
-    }
-
-    /**
+     * it compiles expression
      * @param code the text of expression
      * @param functions HashMap with functions
      * @throws CompileError parser & compiler error
      * @return HashMap with variables
      */
-    public Compiled compile(String code, Functions functions) throws CompileError {
-        parser = new Parser(code, functions);
+    public Compiled compile(String code) throws CompileError {
+        parser = new Parser(code, functions, constants);
         List<Command> cmds = new ArrayList<>();
         List<ExprToken> list = parser.get();
         List<ExprToken> new_list = new ArrayList<>();
@@ -184,6 +190,6 @@ public class Compiler {
             }
         }
         Optimizator optimizator = new Optimizator(cmds, functions);
-        return putConstants(new Compiled(optimizator.optimize(), functions));
+        return new Compiled(optimizator.optimize(), functions);
     }
 }

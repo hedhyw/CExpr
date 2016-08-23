@@ -46,6 +46,7 @@ public class Optimizator {
         }
         int optimized;
         ListIterator<Command> it;
+        CmdVal newVal = null;
         do {
             optimized = 0;
             it = cmds.listIterator();
@@ -102,7 +103,7 @@ public class Optimizator {
                 int reg_res = cmd.reg_res;
                 ++optimized;
                 it.remove();
-                CmdVal newVal = new CmdVal(res, CmdVal.VAL_TYPE.NUM);
+                newVal = new CmdVal(res, CmdVal.VAL_TYPE.NUM);
                 while (it.hasNext()) {
                     cmd = it.next();
                     if (cmd.val0.type == CmdVal.VAL_TYPE.REG
@@ -118,6 +119,8 @@ public class Optimizator {
                 }
             }
         } while (optimized != 0);
+        if (cmds.size() == 0) cmds.add(
+                new Command(Command.CMD.CALL,newVal,null,"set",1));
         return cmds;
     }
 }

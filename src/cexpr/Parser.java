@@ -37,6 +37,7 @@ public class Parser {
     private Lexical lex;
     private Stack<ExprToken> stk;
     private List<ExprToken> out;
+    
     private static final HashMap<Character, Integer> OPERATOR_PRIORITY // for stack
             = new HashMap<Character, Integer>() {
         {
@@ -54,8 +55,8 @@ public class Parser {
         }
     };
 
-    public Parser(String str, Functions functions) {
-        lex = new Lexical(str, functions);
+    public Parser(String str, Functions functions, Constants constants) {
+        lex = new Lexical(str, functions, constants);
         stk = new Stack<>();
         out = new ArrayList<>();
     }

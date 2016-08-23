@@ -85,11 +85,16 @@ public class CExpr {
                 // Example #3: 21.061297505040883
             }
 
-            { // with custom variables
+            { // with custom variables & constants
                 // compiled.put("NAME", (Complex) num)
-                String code = "cos(z+1)";
+                String code = "cos(z+one)";
+                
+                Constants constants = new Constants();
+                constants.put("one", 1.0); // put constant
+                compiler.setConstants(constants);
+                
                 Compiled compiled = compiler.compile(code);
-                compiled.put("z", new Complex(0.5, 2));
+                compiled.put("z", new Complex(0.5, 2)); // put variable
                 Complex complex = compiled.execute();
                 System.out.printf("Example #4: " + complex.toString() + '\n');
                 // Example #4: 0.266127-3.617775i
@@ -110,7 +115,8 @@ public class CExpr {
                         return true;
                     }
                 });
-                Compiled compiled = compiler.compile(code, functions);
+                compiler.setFunctions(functions);
+                Compiled compiled = compiler.compile(code);
                 Complex complex = compiled.execute();
                 System.out.printf("Example #5: " + complex.toString() + '\n');
                 // Example #5: 3.141593+1.000000i
@@ -118,19 +124,20 @@ public class CExpr {
 
             { // getting code
                 // compiled.toString()
-                String code = "cos(PI)+cos(2)+(2+1)*sin(E)";
-                Functions functions = new Functions();
-                Compiled compiled = compiler.compile(code, functions);
+                String code = "cos(PI)+cos(z)+(z+1)*sin(E)";
+                Compiled compiled = compiler.compile(code);
                 System.out.printf("Example #6:\n" + compiled.toString());
+                compiled.put("z", new Complex(0.5, 2));
                 Complex complex = compiled.execute();
                 System.out.printf(complex.toString() + '\n');
                 /**
                  * Example #6:
-                 * r1 := cos [PI]
-                 * r3 := sin [E]
-                 * r4 := MUL 3.0, r3
-                 * r5 := ADD r1, r4
-                 * -0.18380296503841587
+                 * r2 := cos [z]
+                 * r3 := ADD [z], 1.0
+                 * r5 := ADD -1.0, r2
+                 * r6 := MUL r3, 0.41078129050290885
+                 * r7 := ADD r5, r6
+                 * 2.917809-0.917247i
                  */
             }
         } catch (CompileError ex) {

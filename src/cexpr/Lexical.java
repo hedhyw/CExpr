@@ -35,6 +35,7 @@ public class Lexical {
 
     private final String code;
     private final Functions functions;
+    private Constants constants;
     private int i; // position in code
 
     private static final List<Character> OPERATORS
@@ -46,9 +47,10 @@ public class Lexical {
     private static final char DECIMAL_MARK = '.';
     private static final char IMAGINARY = 'i';
 
-    public Lexical(String code, Functions functions) {
+    public Lexical(String code, Functions functions, Constants constants) {
         this.code = code;
         this.functions = functions;
+        this.constants = constants;
         i = 0;
     }
 
@@ -98,6 +100,10 @@ public class Lexical {
             }
         }
         String val = str.toString();
+        if (constants.containsKey(val)){
+            return new ExprToken(
+                    ExprToken.TYPE.NUM_RE, constants.get(val));
+        }
         return new ExprToken((functions.containsKey(val)
                 ? ExprToken.TYPE.FUNCTION
                 : ExprToken.TYPE.IDENTIFIER), val);
