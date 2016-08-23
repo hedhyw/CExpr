@@ -183,6 +183,7 @@ public class Compiler {
                 throw new CompileError("Syntax error");
             }
         }
-        return putConstants(new Compiled(cmds, functions));
+        Optimizator optimizator = new Optimizator(cmds, functions);
+        return putConstants(new Compiled(optimizator.optimize(), functions));
     }
 }
