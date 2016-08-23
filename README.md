@@ -1,4 +1,4 @@
-# CExpr 0.91
+# CExpr 0.92
 Math Complex Expression Compiler
 
 # How to use?
@@ -34,7 +34,7 @@ Complete example: **/cexpr/CExpr.java**
 String code = "-(cos(z)^2)+(1+2i)*3";
 Compiled compiled = compiler.compile(code); // can throw CompileError
 compiled.put("z", new Complex(0.5, 2)); // puts custom variable `z`
-// for custom functions, see: /cexpr/CExpr.java
+// for custom functions or constants, see: /cexpr/CExpr.java
 Complex complex = compiled.execute(); // result here, can throw ExecuteError
 System.out.printf("Result: " + complex.toString());
 // Result: -4.877351+17.481837i
