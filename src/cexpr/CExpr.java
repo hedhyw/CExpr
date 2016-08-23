@@ -104,6 +104,11 @@ public class CExpr {
                     public Complex eval(Complex arg) {
                         return ComplexUtils.add(ComplexUtils.PI, arg);
                     }
+
+                    @Override
+                    public boolean optimize() {
+                        return true;
+                    }
                 });
                 Compiled compiled = compiler.compile(code, functions);
                 Complex complex = compiled.execute();
@@ -113,7 +118,7 @@ public class CExpr {
 
             { // getting code
                 // compiled.toString()
-                String code = "cos(PI)+(2+1)*sin(E)";
+                String code = "cos(PI)+cos(2)+(2+1)*sin(E)";
                 Functions functions = new Functions();
                 Compiled compiled = compiler.compile(code, functions);
                 System.out.printf("Example #6:\n" + compiled.toString());
@@ -122,11 +127,10 @@ public class CExpr {
                 /**
                  * Example #6:
                  * r1 := cos [PI]
-                 * r2 := ADD 2.0, 1.0
                  * r3 := sin [E]
-                 * r4 := MUL r2, r3
+                 * r4 := MUL 3.0, r3
                  * r5 := ADD r1, r4
-                 * 0.23234387150872648
+                 * -0.18380296503841587
                  */
             }
         } catch (CompileError ex) {
