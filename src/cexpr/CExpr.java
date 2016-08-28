@@ -67,7 +67,7 @@ public class CExpr {
                  *  sinh, cosh, tanh, ctanh
                  *  arg, abs, con, inv, round, rnd, im, re
                  */
-                String code = "tan(atan(0.234+PI*1i))";
+                String code = "tan(atan(0.234+inv(PI)))";
                 Compiled compiled = compiler.compile(code);
                 compiled.put("z", new Complex(0.5, 2));
                 Complex complex = compiled.execute();

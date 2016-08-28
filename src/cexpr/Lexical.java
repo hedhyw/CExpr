@@ -93,7 +93,7 @@ public class Lexical {
         StringBuilder str = new StringBuilder();
         for (char chr; i < code.length(); i++) {
             chr = code.charAt(i);
-            if (Character.isLetterOrDigit(chr)) {
+            if (Character.isLetterOrDigit(chr) || chr == '_') {
                 str.append(chr);
             } else {
                 break;
@@ -118,7 +118,7 @@ public class Lexical {
                 return operator_token();
             } else if (Character.isDigit(chr)) {
                 return number_token();
-            } else if (Character.isLetter(chr)) {
+            } else if (Character.isLetter(chr)  || chr == '_') {
                 return identifier_token();
             } else {
                 throw new CompileError("Unexpected symbol: " + chr);
