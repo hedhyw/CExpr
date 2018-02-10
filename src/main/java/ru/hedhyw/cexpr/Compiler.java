@@ -4,53 +4,30 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- *
- * @author Maxim Krivchun
- */
+import ru.hedhyw.cexpr.complex.model.Complex;
+import ru.hedhyw.cexpr.functions.factory.FunctionsFactory;
+import ru.hedhyw.cexpr.functions.factory.IFunctionFactory;
+import ru.hedhyw.cexpr.model.command.Command;
+import ru.hedhyw.cexpr.model.command.ICommandValue;
+import ru.hedhyw.cexpr.model.command.NumValue;
+import ru.hedhyw.cexpr.model.compile.CompileError;
+
 public class Compiler {
 
     private Parser parser;
-    private Functions functions;
+    private IFunctionFactory functionsFactory;
     private Constants constants;
 
     public Compiler(){
-        functions = new Functions();
         constants = new Constants();
-    }
-
-    /**
-     * it gets expression token value with type
-     */
-    private CmdVal convertVal(ExprToken tok) {
-        Object val = tok.val;
-        CmdVal.VAL_TYPE type = null;
-        switch (tok.type) {
-            case NUM_RE:
-                type = CmdVal.VAL_TYPE.NUM;
-                val = new Complex((double) tok.val, 0);
-                break;
-            case NUM_IM:
-                type = CmdVal.VAL_TYPE.NUM;
-                val = new Complex(0, (double) tok.val);
-                break;
-            case IDENTIFIER:
-                type = CmdVal.VAL_TYPE.VAR;
-                break;
-            case REG:
-                type = CmdVal.VAL_TYPE.REG;
-                break;
-
-        }
-        return new CmdVal(val, type);
     }
 
     /**
      * add custom functions
      * @param functions custom functions
     */
-    public void setFunctions(Functions functions){
-        this.functions = functions;
+    public void setFunctionsFactory(IFunctionFactory functionsFactory){
+        this.functionsFactory = functionsFactory;
     }
 
     /**
@@ -69,43 +46,46 @@ public class Compiler {
      * @return HashMap with variables
      */
     public Compiled compile(String code) throws CompileError {
-        parser = new Parser(code, functions, constants);
+        if (functionsFactory == null) functionsFactory = new FunctionsFactory();
+        parser = new Parser(code, functionsFactory, constants);
         List<Command> cmds = new ArrayList<>();
         List<ExprToken> list = parser.get();
-        List<ExprToken> new_list = new ArrayList<>();
-        int num_args;
+        List<ExprToken> newList = new ArrayList<>();
+        int argsCount;
         int reg = 0;
-        int last_size;
+        int lastSize;
         while (list.size() != 1) {
-            last_size = list.size();
+            lastSize = list.size();
             Iterator<ExprToken> it = list.iterator();
             ExprToken tok;
-            num_args = 0;
+            argsCount = 0;
             while (it.hasNext()) {
                 tok = it.next();
                 if (tok.type == ExprToken.TYPE.NUM_IM
                         || tok.type == ExprToken.TYPE.NUM_RE
                         || tok.type == ExprToken.TYPE.REG
                         || tok.type == ExprToken.TYPE.IDENTIFIER) {
-                    num_args++;
-                    new_list.add(tok);
+                    argsCount++;
+                    newList.add(tok);
                 } else if (tok.type == ExprToken.TYPE.FUNCTION) {
                     String function = (String) tok.val;
-                    if (num_args >= 1) {
-                        ExprToken tok0 = new_list.remove(new_list.size() - 1);
-                        CmdVal val0 = convertVal(tok0);
-                        cmds.add(new Command(Command.CMD.CALL, val0, null, function, ++reg));
-                        new_list.add(new ExprToken(ExprToken.TYPE.REG, reg));
+                    if (argsCount >= 1) {
+                        ExprToken tok0 = newList.remove(newList.size() - 1);
+                        ICommandValue val0 =ICommandValue.of(tok0);
+                        cmds.add(new Command(Command.CMD.CALL, val0,
+                            null, function, ++reg));
+                        newList.add(new ExprToken(ExprToken.TYPE.REG, reg));
                     } else {
-                        new_list.add(tok);
+                        newList.add(tok);
                     }
-                    num_args = 0;
+                    argsCount = 0;
                 } else { // ExprToken.TYPE.OPERATOR
                     char operator = (char) tok.val;
-                    if (num_args >= 2 && !(operator == 'm' || operator == 'p')) {
-                        ExprToken tok1 = new_list.remove(new_list.size() - 1);
-                        ExprToken tok0 = new_list.remove(new_list.size() - 1);
-                        CmdVal val0 = convertVal(tok0), val1 = convertVal(tok1);
+                    if (argsCount >= 2 && !(operator == 'm' || operator == 'p')) {
+                        ExprToken tok1 = newList.remove(newList.size() - 1);
+                        ExprToken tok0 = newList.remove(newList.size() - 1);
+                        ICommandValue val0 = ICommandValue.of(tok0);
+                        ICommandValue val1 = ICommandValue.of(tok1);
 
                         Command.CMD type = null;
                         switch (operator) {
@@ -130,43 +110,41 @@ public class Compiler {
                         }
                         cmds.add(new Command(type, val0,
                                 val1, Character.toString(operator), ++reg));
-                        new_list.add(new ExprToken(ExprToken.TYPE.REG, reg));
-                        num_args--;
-                    } else if (num_args >= 1 && operator == 'm') { // unary `-`
-                        ExprToken tok0 = new_list.remove(new_list.size() - 1);
-                        CmdVal val0 = convertVal(tok0),
-                                val1 = new CmdVal(new Complex(-1,0),
-                                        CmdVal.VAL_TYPE.NUM);
+                        newList.add(new ExprToken(ExprToken.TYPE.REG, reg));
+                        argsCount--;
+                    } else if (argsCount >= 1 && operator == 'm') { // unary `-`
+                        ExprToken tok0 = newList.remove(newList.size() - 1);
+                        ICommandValue val0 = ICommandValue.of(tok0);
+                        ICommandValue val1 = new NumValue(new Complex(-1,0));
                         cmds.add(new Command(Command.CMD.MUL, val0,
                                 val1, "*", ++reg));
-                        new_list.add(new ExprToken(ExprToken.TYPE.REG, reg));
-                    } else if (num_args >= 1 && operator == 'p') { // unary `+`
-                        ExprToken tok0 = new_list.remove(new_list.size() - 1);
-                        CmdVal val0 = convertVal(tok0),
-                                val1 = new CmdVal(new Complex(0,0),
-                                        CmdVal.VAL_TYPE.NUM);
+                        newList.add(new ExprToken(ExprToken.TYPE.REG, reg));
+                    } else if (argsCount >= 1 && operator == 'p') { // unary `+`
+                        ExprToken tok0 = newList.remove(newList.size() - 1);
+                        ICommandValue val0 = ICommandValue.of(tok0);
+                        ICommandValue val1 = new NumValue(new Complex(0,0));
                         cmds.add(new Command(Command.CMD.ADD, val0,
                                 val1, "+", ++reg));
-                        new_list.add(new ExprToken(ExprToken.TYPE.REG, reg));
+                        newList.add(new ExprToken(ExprToken.TYPE.REG, reg));
                     } else {
-                        new_list.add(tok);
-                        num_args = 0;
+                        newList.add(tok);
+                        argsCount = 0;
                     }
                 }
             }
 
             list.clear();
-            it = new_list.iterator();
+            it = newList.iterator();
             while (it.hasNext()) {
                 list.add(it.next());
             }
-            new_list.clear();
+            newList.clear();
 
-            if (last_size == list.size()) {
+            if (lastSize == list.size()) {
                 throw new CompileError("Syntax error");
             }
         }
-        Optimizator optimizator = new Optimizator(cmds, functions);
-        return new Compiled(optimizator.optimize(), functions);
+        Optimizator optimizator = new Optimizator(cmds, functionsFactory);
+        return new Compiled(optimizator.optimize(), functionsFactory);
     }
 }

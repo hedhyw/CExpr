@@ -1,4 +1,6 @@
-package ru.hedhyw.cexpr;
+package ru.hedhyw.cexpr.complex;
+
+import ru.hedhyw.cexpr.complex.model.Complex;
 
 public class ComplexUtils {
 
@@ -7,35 +9,40 @@ public class ComplexUtils {
     public static final Complex E = new Complex(Math.E, 0);
 
     public static Complex add(Complex c1, Complex c2) {
-        return new Complex(c1.re + c2.re, c1.im + c2.im);
+        return new Complex(
+            c1.getReal() + c2.getReal(),
+            c1.getImaginary() + c2.getImaginary());
     }
 
     public static Complex sub(Complex c1, Complex c2) {
-        return new Complex(c1.re - c2.re, c1.im - c2.im);
+        return new Complex(
+            c1.getReal() - c2.getReal(),
+            c1.getImaginary() - c2.getImaginary());
     }
 
     public static Complex mul(Complex c1, Complex c2) {
         return new Complex(
-                c1.re * c2.re - c1.im * c2.im,
-                c1.re * c2.im + c1.im * c2.re);
+                c1.getReal() * c2.getReal() - c1.getImaginary(),
+                c1.getReal() + c1.getImaginary() * c2.getReal());
     }
 
     public static Complex div(Complex c1, Complex c2) {
-        double d = c2.re * c2.re + c2.im * c2.im;
-        return new Complex((c1.re * c2.re + c1.im * c2.im) / d,
-                (c1.im * c2.re - c1.re * c2.im) / d);
+        double d = c2.getReal() * c2.getReal() + c2.getImaginary();
+        return new Complex(
+                (c1.getReal() * c2.getReal() + c1.getImaginary()) / d,
+                (c1.getImaginary() * c2.getReal() - c1.getReal()) / d);
     }
 
     public static Complex sin(Complex c) {
         return new Complex(
-                Math.sin(c.re) * Math.cosh(c.im),
-                Math.cos(c.re) * Math.sinh(c.im));
+                Math.sin(c.getReal()) * Math.cosh(c.getImaginary()),
+                Math.cos(c.getReal()) * Math.sinh(c.getImaginary()));
     }
 
     public static Complex cos(Complex c) {
         return new Complex(
-                Math.cos(c.re) * Math.cosh(c.im),
-                -Math.sin(c.re) * Math.sinh(c.im));
+                Math.cos(c.getReal()) * Math.cosh(c.getImaginary()),
+                -Math.sin(c.getReal()) * Math.sinh(c.getImaginary()));
     }
 
     public static Complex tan(Complex c) {
@@ -47,29 +54,35 @@ public class ComplexUtils {
     }
 
     public static Complex acos(Complex c) {
-        double a = Math.sqrt(Math.pow(1 + c.re, 2) + c.im * c.im);
-        double b = Math.sqrt(Math.pow(1 - c.re, 2) + c.im * c.im);
+        double a = Math.sqrt(Math.pow(1 + c.getReal(), 2) +
+            c.getImaginary() * c.getImaginary());
+        double b = Math.sqrt(Math.pow(1 - c.getReal(), 2) +
+            c.getImaginary() * c.getImaginary());
         double B = (a + b) / 2.0;
         return new Complex(Math.acos((a - b) / 2.0),
                 -Math.log(B + Math.sqrt(B * B - 1)));
     }
 
     public static Complex asin(Complex c) {
-        double a = Math.sqrt(Math.pow(1 + c.re, 2) + c.im * c.im);
-        double b = Math.sqrt(Math.pow(1 - c.re, 2) + c.im * c.im);
+        double a = Math.sqrt(Math.pow(1 + c.getReal(), 2) +
+            c.getImaginary() * c.getImaginary());
+        double b = Math.sqrt(Math.pow(1 - c.getReal(), 2) +
+            c.getImaginary() * c.getImaginary());
         double B = (a + b) / 2.0;
         return new Complex(Math.asin((a - b) / 2.0),
                 Math.log(B + Math.sqrt(B * B - 1)));
     }
 
     public static Complex atan(Complex c) {
-        double r2 = Math.pow(c.re, 2);
-        return new Complex(0.5 * Math.atan2(2 * c.re, 1 - r2 - Math.pow(c.im, 2)),
-                0.25 * Math.log((r2 + Math.pow(1 + c.im, 2)) / (r2 + Math.pow(1 - c.im, 2))));
+        double r2 = Math.pow(c.getReal(), 2);
+        return new Complex(0.5 * Math.atan2(2 * c.getReal(),
+            1 - r2 - Math.pow(c.getImaginary(), 2)),
+            0.25 * Math.log((r2 + Math.pow(1 + c.getImaginary(), 2)) /
+            (r2 + Math.pow(1 - c.getImaginary(), 2))));
     }
 
     public static Complex pow(Complex c, double num) {
-        double phase = Math.atan2(c.im, c.re);
+        double phase = Math.atan2(c.getImaginary(), c.getReal());
         double z = Math.pow(abs(c), num);
         return new Complex(
                 z * Math.cos(num * phase),
@@ -77,12 +90,14 @@ public class ComplexUtils {
     }
 
     public static Complex exp(Complex c) {
-        double k = Math.exp(c.re);
-        return new Complex(k * Math.cos(c.im), k * Math.sin(c.im));
+        double k = Math.exp(c.getReal());
+        return new Complex(
+            k * Math.cos(c.getImaginary()),
+            k * Math.sin(c.getImaginary()));
     }
 
     public static Complex conjugate(Complex c) {
-        return new Complex(c.re, -c.im);
+        return new Complex(c.getReal(), -c.getImaginary());
     }
 
     public static Complex ln(Complex c, double n) {
@@ -102,8 +117,8 @@ public class ComplexUtils {
     }
 
     public static Complex round(Complex c) {
-        return new Complex(Math.round(c.re),
-                Math.round(c.im));
+        return new Complex(Math.round(c.getReal()),
+                Math.round(c.getImaginary()));
     }
 
     public static Complex random(Complex c) {
@@ -111,13 +126,13 @@ public class ComplexUtils {
     }
 
     public static Complex sinh(Complex c) {
-        return new Complex(Math.sinh(c.re) * Math.cos(c.im),
-                Math.cosh(c.re) * Math.sin(c.im));
+        return new Complex(Math.sinh(c.getReal()) * Math.cos(c.getImaginary()),
+                Math.cosh(c.getReal()) * Math.sin(c.getImaginary()));
     }
 
     public static Complex cosh(Complex c) {
-        return new Complex(Math.cosh(c.re) * Math.cos(c.im),
-                Math.sinh(c.re) * Math.sin(c.im));
+        return new Complex(Math.cosh(c.getReal()) * Math.cos(c.getImaginary()),
+                Math.sinh(c.getReal()) * Math.sin(c.getImaginary()));
     }
 
     public static Complex tanh(Complex c) {
@@ -129,14 +144,15 @@ public class ComplexUtils {
     }
 
     public static double abs(Complex c) {
-        return Math.sqrt(c.im * c.im + c.re * c.re);
+        return Math.sqrt(
+            c.getImaginary() * c.getImaginary() + c.getReal() * c.getReal());
     }
 
     public static Double arg(Complex c) {
-        if (c.re == 0) {
+        if (c.getReal() == 0) {
             return Math.PI / 2;
         }
-        return Math.atan2(c.im, c.re);
+        return Math.atan2(c.getImaginary(), c.getReal());
     }
 
     public static boolean equals(Complex c1, Complex c2) {

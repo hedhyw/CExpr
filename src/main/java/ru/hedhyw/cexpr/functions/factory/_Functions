@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 public class Functions extends HashMap<String, Functions.function> {
 
+    static final long serialVersionUID = 19786;
+
     public interface function {
 
         public boolean optimize();
@@ -12,54 +14,54 @@ public class Functions extends HashMap<String, Functions.function> {
     }
 
     public Functions() {
-        put("sin", new function() {
-            @Override
-            public Complex eval(Complex arg) {
-                return ComplexUtils.sin(arg);
-            }
+        // put("sin", new function() {
+        //     @Override
+        //     public Complex eval(Complex arg) {
+        //         return ComplexUtils.sin(arg);
+        //     }
 
-            @Override
-            public boolean optimize() {
-                return true;
-            }
+        //     @Override
+        //     public boolean optimize() {
+        //         return true;
+        //     }
 
-        });
-        put("cos", new function() {
-            @Override
-            public Complex eval(Complex arg) {
-                return ComplexUtils.cos(arg);
-            }
+        // });
+        // put("cos", new function() {
+        //     @Override
+        //     public Complex eval(Complex arg) {
+        //         return ComplexUtils.cos(arg);
+        //     }
 
-            @Override
-            public boolean optimize() {
-                return true;
-            }
+        //     @Override
+        //     public boolean optimize() {
+        //         return true;
+        //     }
 
-        });
-        put("tan", new function() {
-            @Override
-            public Complex eval(Complex arg) {
-                return ComplexUtils.tan(arg);
-            }
+        // });
+        // put("tan", new function() {
+        //     @Override
+        //     public Complex eval(Complex arg) {
+        //         return ComplexUtils.tan(arg);
+        //     }
 
-            @Override
-            public boolean optimize() {
-                return true;
-            }
+        //     @Override
+        //     public boolean optimize() {
+        //         return true;
+        //     }
 
-        });
-        put("ctan", new function() {
-            @Override
-            public Complex eval(Complex arg) {
-                return ComplexUtils.ctan(arg);
-            }
+        // });
+        // put("ctan", new function() {
+        //     @Override
+        //     public Complex eval(Complex arg) {
+        //         return ComplexUtils.ctan(arg);
+        //     }
 
-            @Override
-            public boolean optimize() {
-                return true;
-            }
+        //     @Override
+        //     public boolean optimize() {
+        //         return true;
+        //     }
 
-        });
+        // });
         put("re", new function() {
             @Override
             public Complex eval(Complex arg) {
@@ -106,28 +108,28 @@ public class Functions extends HashMap<String, Functions.function> {
                 return true;
             }
         });
-        put("asin", new function() {
-            @Override
-            public Complex eval(Complex arg) {
-                return ComplexUtils.asin(arg);
-            }
+        // put("asin", new function() {
+        //     @Override
+        //     public Complex eval(Complex arg) {
+        //         return ComplexUtils.asin(arg);
+        //     }
 
-            @Override
-            public boolean optimize() {
-                return true;
-            }
-        });
-        put("acos", new function() {
-            @Override
-            public Complex eval(Complex arg) {
-                return ComplexUtils.acos(arg);
-            }
+        //     @Override
+        //     public boolean optimize() {
+        //         return true;
+        //     }
+        // });
+        // put("acos", new function() {
+        //     @Override
+        //     public Complex eval(Complex arg) {
+        //         return ComplexUtils.acos(arg);
+        //     }
 
-            @Override
-            public boolean optimize() {
-                return true;
-            }
-        });
+        //     @Override
+        //     public boolean optimize() {
+        //         return true;
+        //     }
+        // });
         put("sqrt", new function() {
             @Override
             public Complex eval(Complex arg) {

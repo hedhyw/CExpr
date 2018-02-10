@@ -3,11 +3,14 @@ package ru.hedhyw.cexpr;
 import java.util.Arrays;
 import java.util.List;
 
+import ru.hedhyw.cexpr.functions.factory.IFunctionFactory;
+import ru.hedhyw.cexpr.model.compile.CompileError;
+
 // Reverse Polish notation
 public class Lexical {
 
     private final String code;
-    private final Functions functions;
+    private final IFunctionFactory functionsFactory;
     private Constants constants;
     private int i; // position in code
 
@@ -20,11 +23,14 @@ public class Lexical {
     private static final char DECIMAL_MARK = '.';
     private static final char IMAGINARY = 'i';
 
-    public Lexical(String code, Functions functions, Constants constants) {
-        this.code = code;
-        this.functions = functions;
-        this.constants = constants;
-        i = 0;
+    public Lexical(
+        String code,
+        IFunctionFactory functionsFactory,
+        Constants constants) {
+            this.code = code;
+            this.functionsFactory = functionsFactory;
+            this.constants = constants;
+            i = 0;
     }
 
     private ExprToken operator_token() {
@@ -77,7 +83,7 @@ public class Lexical {
             return new ExprToken(
                     ExprToken.TYPE.NUM_RE, constants.get(val));
         }
-        return new ExprToken((functions.containsKey(val)
+        return new ExprToken((functionsFactory.hasFunction(val)
                 ? ExprToken.TYPE.FUNCTION
                 : ExprToken.TYPE.IDENTIFIER), val);
     }

@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
+import ru.hedhyw.cexpr.functions.factory.IFunctionFactory;
+import ru.hedhyw.cexpr.model.compile.CompileError;
+
 public class Parser {
 
     private Lexical lex;
@@ -28,8 +31,8 @@ public class Parser {
         }
     };
 
-    public Parser(String str, Functions functions, Constants constants) {
-        lex = new Lexical(str, functions, constants);
+    public Parser(String str, IFunctionFactory functionFactory, Constants constants) {
+        lex = new Lexical(str, functionFactory, constants);
         stk = new Stack<>();
         out = new ArrayList<>();
     }

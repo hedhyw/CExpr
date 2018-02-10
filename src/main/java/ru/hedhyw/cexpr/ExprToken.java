@@ -14,7 +14,7 @@ public class ExprToken {
         this.val = val;
     }
 
-    enum TYPE {
+    public enum TYPE {
         NUM_RE,
         NUM_IM,
         IDENTIFIER,
