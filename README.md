@@ -2,7 +2,7 @@
 Math Complex Expression Compiler
 
 # How to use?
-Complete example: **/cexpr/CExpr.java**
+Complete example: **CExpr/src/main/java/App.java**
 
 ```java
 /**
