@@ -1,43 +1,20 @@
-/*
- * The MIT License
- *
- * Copyright 2016 Maxim Krivchun.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-package cexpr;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author Maxim Krivchun
- */
-public class CExpr {
+import ru.hedhyw.cexpr.CompileError;
+import ru.hedhyw.cexpr.Compiled;
+import ru.hedhyw.cexpr.Compiler;
+import ru.hedhyw.cexpr.Complex;
+import ru.hedhyw.cexpr.ComplexUtils;
+import ru.hedhyw.cexpr.Constants;
+import ru.hedhyw.cexpr.Functions;
 
-    /**
-     * Example
-     *
-     * @param args the command line arguments
-     *
-     */
+public class App {
+    public String getGreeting() {
+        return "Hello world.";
+    }
+
     public static void main(String[] args) {
         Compiler compiler = new Compiler();
         try {
@@ -59,7 +36,7 @@ public class CExpr {
                  *  con(7+8i) = 7-8i
                  *  rnd(5+4i) = random()*5+random()*4
                  *  round(5.5+4.123i) = 6+4i
-                 * 
+                 *
                  * List:
                  *  sqrt, exp, ln, log10
                  *  sin, cos, tan, ctan
@@ -88,11 +65,11 @@ public class CExpr {
             { // with custom variables & constants
                 // compiled.put("NAME", (Complex) num)
                 String code = "cos(z+one)";
-                
+
                 Constants constants = new Constants();
                 constants.put("one", 1.0); // put constant
                 compiler.setConstants(constants);
-                
+
                 Compiled compiled = compiler.compile(code);
                 compiled.put("z", new Complex(0.5, 2)); // put variable
                 Complex complex = compiled.execute();
@@ -141,7 +118,7 @@ public class CExpr {
                  */
             }
         } catch (CompileError ex) {
-            Logger.getLogger(CExpr.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
