@@ -39,12 +39,13 @@ public class FunctionsFactory implements IFunctionFactory {
         addFunction(new RndFunction());
         addFunction(new SetFunction());
 
-        addFunction(new SinFunction());
-        addFunction(new CosFunction());
-        addFunction(new TanFunction());
-        addFunction(new AsinFunction());
         addFunction(new AcosFunction());
+        addFunction(new AsinFunction());
         addFunction(new AtanFunction());
+        addFunction(new CosFunction());
+        addFunction(new CtanFunction());
+        addFunction(new SinFunction());
+        addFunction(new TanFunction());
     }
 
     public void addFunction(IFunction function) {

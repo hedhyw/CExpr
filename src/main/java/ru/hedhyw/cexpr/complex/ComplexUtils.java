@@ -27,10 +27,14 @@ public class ComplexUtils {
     }
 
     public static Complex div(Complex c1, Complex c2) {
-        double d = c2.getReal() * c2.getReal() + c2.getImaginary();
+        double a = c1.getReal();
+        double b = c1.getImaginary();
+        double c = c2.getReal();
+        double d = c2.getImaginary();
+        double denominator = c * c + d * d;
         return new Complex(
-                (c1.getReal() * c2.getReal() + c1.getImaginary()) / d,
-                (c1.getImaginary() * c2.getReal() - c1.getReal()) / d);
+                (a * c + b * d) / denominator,
+                (b * c - a * d) / denominator);
     }
 
     public static Complex sin(Complex c) {
