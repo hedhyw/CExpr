@@ -4,7 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import ru.hedhyw.cexpr.functions.factory.IFunctionFactory;
-import ru.hedhyw.cexpr.model.compile.CompileError;
+import ru.hedhyw.cexpr.model.errors.CompileError;
+import ru.hedhyw.cexpr.model.Constants;
+import ru.hedhyw.cexpr.model.token.*;
 
 // Reverse Polish notation
 public class Lexical {
@@ -33,11 +35,11 @@ public class Lexical {
             i = 0;
     }
 
-    private ExprToken operator_token() {
-        return new ExprToken(ExprToken.TYPE.OPERATOR, code.charAt(i++));
+    private IToken operatorToken() {
+        return new OperatorToken(code.charAt(i++));
     }
 
-    private ExprToken number_token() throws CompileError {
+    private IToken numberToken() throws CompileError {
         double val = 0;
         boolean marked = false,
                 imaginary = false;
@@ -62,13 +64,11 @@ public class Lexical {
             }
         }
         val /= Math.pow(10, mark_i);
-        return new ExprToken((imaginary
-                ? ExprToken.TYPE.NUM_IM
-                : ExprToken.TYPE.NUM_RE),
-                val);
+        if (imaginary) return new ImaginaryNumberToken(val);
+        return new RealNumberToken(val);
     }
 
-    private ExprToken identifier_token() {
+    private IToken identifierToken() {
         StringBuilder str = new StringBuilder();
         for (char chr; i < code.length(); i++) {
             chr = code.charAt(i);
@@ -80,29 +80,27 @@ public class Lexical {
         }
         String val = str.toString();
         if (constants.containsKey(val)){
-            return new ExprToken(
-                    ExprToken.TYPE.NUM_RE, constants.get(val));
+            return new RealNumberToken(constants.get(val));
         }
-        return new ExprToken((functionsFactory.hasFunction(val)
-                ? ExprToken.TYPE.FUNCTION
-                : ExprToken.TYPE.IDENTIFIER), val);
+        if (functionsFactory.hasFunction(val)) return new FunctionToken(val);
+        return new IdentifierToken(val);
     }
 
-    public ExprToken next_token() throws CompileError {
+    public IToken nextToken() throws CompileError {
         for (char chr; i < code.length(); i++) {
             chr = code.charAt(i);
             if (IGNORING.contains(chr)) {
                 continue;
             } else if (OPERATORS.contains(chr)) {
-                return operator_token();
+                return operatorToken();
             } else if (Character.isDigit(chr)) {
-                return number_token();
+                return numberToken();
             } else if (Character.isLetter(chr)  || chr == '_') {
-                return identifier_token();
+                return identifierToken();
             } else {
                 throw new CompileError("Unexpected symbol: " + chr);
             }
         }
-        return new ExprToken(ExprToken.TYPE.END, null);
+        return new EndToken();
     }
 }

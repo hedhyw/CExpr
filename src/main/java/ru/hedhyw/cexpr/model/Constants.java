@@ -1,4 +1,4 @@
-package ru.hedhyw.cexpr;
+package ru.hedhyw.cexpr.model;
 
 import java.util.HashMap;
 

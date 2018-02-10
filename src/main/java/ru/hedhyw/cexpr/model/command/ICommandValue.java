@@ -1,7 +1,12 @@
 package ru.hedhyw.cexpr.model.command;
 
 import ru.hedhyw.cexpr.complex.model.Complex;
-import ru.hedhyw.cexpr.ExprToken;
+import ru.hedhyw.cexpr.model.token.IToken;
+import ru.hedhyw.cexpr.model.token.IdentifierToken;
+import ru.hedhyw.cexpr.model.token.ImaginaryNumberToken;
+import ru.hedhyw.cexpr.model.token.RealNumberToken;
+import ru.hedhyw.cexpr.model.token.RegisterToken;
+
 
 public interface ICommandValue {
     public Object getValue();
@@ -15,19 +20,23 @@ public interface ICommandValue {
         VAR,
     }
 
-    public static ICommandValue of(ExprToken token) {
-        switch (token.type) {
-            case NUM_RE:
-                return new NumValue(new Complex((double) token.val, 0));
-            case NUM_IM:
-                return new NumValue(new Complex(0, (double) token.val));
-            case IDENTIFIER:
-                return new VarValue((String) token.val);
-            case REG:
-                return new RegValue((Integer) token.val);
-            default:
-                return null;
-        }
+    public static ICommandValue of(IToken token) {
+      switch (token.getType()) {
+        case NUM_RE:
+          Double reVal = ((RealNumberToken) token).getValue();
+          return new NumValue(new Complex(reVal, 0));
+        case NUM_IM:
+          Double imVal = ((ImaginaryNumberToken) token).getValue();
+          return new NumValue(new Complex(0, imVal));
+        case IDENTIFIER:
+          String varName = ((IdentifierToken) token).getValue();
+          return new VarValue(varName);
+        case REG:
+          Integer register = ((RegisterToken) token).getValue();
+          return new RegValue(register);
+        default:
+            return null;
+      }
     }
 
 }

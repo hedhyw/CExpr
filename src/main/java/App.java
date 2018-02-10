@@ -3,19 +3,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import ru.hedhyw.cexpr.Compiled;
 import ru.hedhyw.cexpr.Compiler;
-import ru.hedhyw.cexpr.Constants;
+import ru.hedhyw.cexpr.model.Constants;
 import ru.hedhyw.cexpr.complex.ComplexUtils;
 import ru.hedhyw.cexpr.complex.model.Complex;
 import ru.hedhyw.cexpr.functions.factory.FunctionsFactory;
 import ru.hedhyw.cexpr.functions.factory.IFunctionFactory;
 import ru.hedhyw.cexpr.functions.model.IFunction;
-import ru.hedhyw.cexpr.model.compile.CompileError;
+import ru.hedhyw.cexpr.model.errors.CompileError;
 
 public class App {
 
     public static void main(String[] args) {
-        Compiler compiler = new Compiler();
         try {
+            Compiler compiler = new Compiler();
+
             { // all numbers are complex
                 String code = "-cos(z)^2+(1+2i)*3";
                 Compiled compiled = compiler.compile(code);

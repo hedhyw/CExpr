@@ -12,7 +12,7 @@ import ru.hedhyw.cexpr.model.command.ICommandValue;
 import ru.hedhyw.cexpr.model.command.NumValue;
 import ru.hedhyw.cexpr.model.command.RegValue;
 import ru.hedhyw.cexpr.model.command.ICommandValue.CMD_TYPE;
-import ru.hedhyw.cexpr.model.compile.CompileError;
+import ru.hedhyw.cexpr.model.errors.CompileError;
 
 public class Optimizator {
 
@@ -47,7 +47,7 @@ public class Optimizator {
                 if (val1num) {
                     val1 = ((NumValue) cmd.getSecondValue()).getValue();
                 }
-                Complex res = ComplexUtils.ZERO;
+                Complex res;
                 switch (cmd.getCommand()) {
                     case ADD:
                         res = ComplexUtils.add(val0, val1);
@@ -86,22 +86,24 @@ public class Optimizator {
                         }
                         res = func.eval(val0);
                         break;
+                    default:
+                        res = ComplexUtils.ZERO;
                 }
-                int reg_res = cmd.getResultRegister();
+                int regResult = cmd.getResultRegister();
                 ++optimized;
                 it.remove();
                 newVal = new NumValue(res);
                 while (it.hasNext()) {
                     cmd = it.next();
                     if (cmd.getFirstValue().getType() == CMD_TYPE.REG &&
-                        ((RegValue) cmd.getFirstValue()).getValue() == reg_res) {
+                        ((RegValue) cmd.getFirstValue()).getValue() == regResult) {
                             it.set(new Command(cmd.getCommand(),
                                 newVal, cmd.getSecondValue(),
                                 cmd.getFunctionName(), cmd.getResultRegister()));
                     }
                     if (cmd.getSecondValue() != null &&
                         cmd.getSecondValue().getType() == CMD_TYPE.REG &&
-                        ((RegValue) cmd.getSecondValue()).getValue() == reg_res) {
+                        ((RegValue) cmd.getSecondValue()).getValue() == regResult) {
                             it.set(new Command(cmd.getCommand(), cmd.getFirstValue(),
                                 newVal, cmd.getFunctionName(), cmd.getResultRegister()));
                     }

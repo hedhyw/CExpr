@@ -7,10 +7,15 @@ import java.util.List;
 import ru.hedhyw.cexpr.complex.model.Complex;
 import ru.hedhyw.cexpr.functions.factory.FunctionsFactory;
 import ru.hedhyw.cexpr.functions.factory.IFunctionFactory;
+import ru.hedhyw.cexpr.model.Constants;
 import ru.hedhyw.cexpr.model.command.Command;
 import ru.hedhyw.cexpr.model.command.ICommandValue;
 import ru.hedhyw.cexpr.model.command.NumValue;
-import ru.hedhyw.cexpr.model.compile.CompileError;
+import ru.hedhyw.cexpr.model.errors.CompileError;
+import ru.hedhyw.cexpr.model.token.FunctionToken;
+import ru.hedhyw.cexpr.model.token.IToken;
+import ru.hedhyw.cexpr.model.token.OperatorToken;
+import ru.hedhyw.cexpr.model.token.RegisterToken;
 
 public class Compiler {
 
@@ -49,83 +54,64 @@ public class Compiler {
         if (functionsFactory == null) functionsFactory = new FunctionsFactory();
         parser = new Parser(code, functionsFactory, constants);
         List<Command> cmds = new ArrayList<>();
-        List<ExprToken> list = parser.get();
-        List<ExprToken> newList = new ArrayList<>();
+        List<IToken> list = parser.get();
+        List<IToken> newList = new ArrayList<>();
         int argsCount;
         int reg = 0;
         int lastSize;
         while (list.size() != 1) {
             lastSize = list.size();
-            Iterator<ExprToken> it = list.iterator();
-            ExprToken tok;
+            Iterator<IToken> it = list.iterator();
+            IToken tok;
             argsCount = 0;
             while (it.hasNext()) {
                 tok = it.next();
-                if (tok.type == ExprToken.TYPE.NUM_IM
-                        || tok.type == ExprToken.TYPE.NUM_RE
-                        || tok.type == ExprToken.TYPE.REG
-                        || tok.type == ExprToken.TYPE.IDENTIFIER) {
+                if (tok.getType() == IToken.TOK_TYPE.NUM_IM
+                        || tok.getType() == IToken.TOK_TYPE.NUM_RE
+                        || tok.getType() == IToken.TOK_TYPE.REG
+                        || tok.getType() == IToken.TOK_TYPE.IDENTIFIER) {
                     argsCount++;
                     newList.add(tok);
-                } else if (tok.type == ExprToken.TYPE.FUNCTION) {
-                    String function = (String) tok.val;
+                } else if (tok.getType() == IToken.TOK_TYPE.FUNCTION) {
+                    String function = ((FunctionToken) tok).getValue();
                     if (argsCount >= 1) {
-                        ExprToken tok0 = newList.remove(newList.size() - 1);
-                        ICommandValue val0 =ICommandValue.of(tok0);
+                        IToken tok0 = newList.remove(newList.size() - 1);
+                        ICommandValue val0 = ICommandValue.of(tok0);
                         cmds.add(new Command(Command.CMD.CALL, val0,
                             null, function, ++reg));
-                        newList.add(new ExprToken(ExprToken.TYPE.REG, reg));
+                        newList.add(new RegisterToken(reg));
                     } else {
                         newList.add(tok);
                     }
                     argsCount = 0;
-                } else { // ExprToken.TYPE.OPERATOR
-                    char operator = (char) tok.val;
+                } else {
+                    OperatorToken opTok = (OperatorToken) tok;
+                    char operator = opTok.getValue();
                     if (argsCount >= 2 && !(operator == 'm' || operator == 'p')) {
-                        ExprToken tok1 = newList.remove(newList.size() - 1);
-                        ExprToken tok0 = newList.remove(newList.size() - 1);
+                        IToken tok1 = newList.remove(newList.size() - 1);
+                        IToken tok0 = newList.remove(newList.size() - 1);
                         ICommandValue val0 = ICommandValue.of(tok0);
                         ICommandValue val1 = ICommandValue.of(tok1);
 
-                        Command.CMD type = null;
-                        switch (operator) {
-                            case '*':
-                                type = Command.CMD.MUL;
-                                break;
-                            case '/':
-                                type = Command.CMD.DIV;
-                                break;
-                            case '-':
-                                type = Command.CMD.SUB;
-                                break;
-                            case '+':
-                                type = Command.CMD.ADD;
-                                break;
-                            case '^':
-                                type = Command.CMD.POW;
-                                break;
-                            case '%':
-                                type = Command.CMD.MOD;
-                                break;
-                        }
+                        Command.CMD type = opTok.getCommand();
                         cmds.add(new Command(type, val0,
                                 val1, Character.toString(operator), ++reg));
-                        newList.add(new ExprToken(ExprToken.TYPE.REG, reg));
+                        newList.add(new RegisterToken(reg));
                         argsCount--;
                     } else if (argsCount >= 1 && operator == 'm') { // unary `-`
-                        ExprToken tok0 = newList.remove(newList.size() - 1);
+                        IToken tok0 = newList.remove(newList.size() - 1);
                         ICommandValue val0 = ICommandValue.of(tok0);
                         ICommandValue val1 = new NumValue(new Complex(-1,0));
                         cmds.add(new Command(Command.CMD.MUL, val0,
                                 val1, "*", ++reg));
-                        newList.add(new ExprToken(ExprToken.TYPE.REG, reg));
+                        newList.add(new RegisterToken(reg));
                     } else if (argsCount >= 1 && operator == 'p') { // unary `+`
-                        ExprToken tok0 = newList.remove(newList.size() - 1);
+                        IToken tok0 = newList.remove(newList.size() - 1);
                         ICommandValue val0 = ICommandValue.of(tok0);
                         ICommandValue val1 = new NumValue(new Complex(0,0));
                         cmds.add(new Command(Command.CMD.ADD, val0,
                                 val1, "+", ++reg));
-                        newList.add(new ExprToken(ExprToken.TYPE.REG, reg));
+                        newList.add(new RegisterToken(reg));
                     } else {
                         newList.add(tok);
                         argsCount = 0;

@@ -60,6 +60,7 @@ public class Command {
       DIV,
       POW,
       MOD,
-      CALL
+      CALL,
+      INVALID
     }
 }

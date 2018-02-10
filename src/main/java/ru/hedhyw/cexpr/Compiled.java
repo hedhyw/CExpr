@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import ru.hedhyw.cexpr.model.execute.ExecuteError;
+import ru.hedhyw.cexpr.model.errors.ExecuteError;
 import ru.hedhyw.cexpr.complex.ComplexUtils;
 import ru.hedhyw.cexpr.complex.model.Complex;
 import ru.hedhyw.cexpr.functions.factory.IFunctionFactory;
@@ -94,6 +94,8 @@ public class Compiled extends HashMap<String, Complex> {
                     reg = functionsFactory.getFunction(cmd.getFunctionName())
                         .eval(val0);
                     break;
+                case INVALID:
+                    throw new ExecuteError("Invalid operator");
             }
             regs.put(cmd.getResultRegister(), reg);
         }

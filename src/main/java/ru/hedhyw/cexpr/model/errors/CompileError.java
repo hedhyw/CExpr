@@ -1,4 +1,4 @@
-package ru.hedhyw.cexpr.model.compile;
+package ru.hedhyw.cexpr.model.errors;
 
 public class CompileError extends Error {
 
