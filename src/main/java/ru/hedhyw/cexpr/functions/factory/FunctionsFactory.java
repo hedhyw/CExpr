@@ -2,7 +2,12 @@ package ru.hedhyw.cexpr.functions.factory;
 
 import java.util.HashMap;
 
-import ru.hedhyw.cexpr.functions.model.*;
+import ru.hedhyw.cexpr.functions.model.IFunction;
+import ru.hedhyw.cexpr.functions.model.SqrtFunction;
+import ru.hedhyw.cexpr.functions.model.exponent.*;
+import ru.hedhyw.cexpr.functions.model.hyperbolic.*;
+import ru.hedhyw.cexpr.functions.model.number.*;
+import ru.hedhyw.cexpr.functions.model.special.*;
 import ru.hedhyw.cexpr.functions.model.trigonometric.*;
 
 public class FunctionsFactory implements IFunctionFactory {
@@ -11,11 +16,35 @@ public class FunctionsFactory implements IFunctionFactory {
 
     public FunctionsFactory() {
         functions = new HashMap<String, IFunction>();
+
+        addFunction(new SqrtFunction());
+
+        addFunction(new ExpFunction());
+        addFunction(new LnFunction());
+        addFunction(new Log10Function());
+
+        addFunction(new CoshFunction());
+        addFunction(new CtanhFunction());
+        addFunction(new SinhFunction());
+        addFunction(new TanhFunction());
+
+        addFunction(new AbsFunction());
+        addFunction(new ArgFunction());
+        addFunction(new ConFunction());
+        addFunction(new ImFunction());
+        addFunction(new InvFunction());
+        addFunction(new ReFunction());
+        addFunction(new RoundFunction());
+
+        addFunction(new RndFunction());
+        addFunction(new SetFunction());
+
         addFunction(new SinFunction());
         addFunction(new CosFunction());
         addFunction(new TanFunction());
         addFunction(new AsinFunction());
         addFunction(new AcosFunction());
+        addFunction(new AtanFunction());
     }
 
     public void addFunction(IFunction function) {

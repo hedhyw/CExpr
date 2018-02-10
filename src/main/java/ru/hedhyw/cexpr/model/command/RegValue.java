@@ -13,7 +13,7 @@ public class RegValue implements ICommandValue {
   }
 
   public String toString() {
-    return String.valueOf(value);
+    return String.format("r%s", value);
   }
 
   public CMD_TYPE getType() {
