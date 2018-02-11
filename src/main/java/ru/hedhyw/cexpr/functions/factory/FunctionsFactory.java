@@ -12,52 +12,52 @@ import ru.hedhyw.cexpr.functions.model.trigonometric.*;
 
 public class FunctionsFactory implements IFunctionFactory {
 
-    private static HashMap<String, IFunction> functions;
+  private static HashMap<String, IFunction> functions;
 
-    public FunctionsFactory() {
-        functions = new HashMap<String, IFunction>();
+  public FunctionsFactory() {
+    functions = new HashMap<String, IFunction>();
 
-        addFunction(new SqrtFunction());
+    addFunction(new SqrtFunction());
 
-        addFunction(new ExpFunction());
-        addFunction(new LnFunction());
-        addFunction(new Log10Function());
+    addFunction(new ExpFunction());
+    addFunction(new LnFunction());
+    addFunction(new Log10Function());
 
-        addFunction(new CoshFunction());
-        addFunction(new CtanhFunction());
-        addFunction(new SinhFunction());
-        addFunction(new TanhFunction());
+    addFunction(new CoshFunction());
+    addFunction(new CtanhFunction());
+    addFunction(new SinhFunction());
+    addFunction(new TanhFunction());
 
-        addFunction(new AbsFunction());
-        addFunction(new ArgFunction());
-        addFunction(new ConFunction());
-        addFunction(new ImFunction());
-        addFunction(new InvFunction());
-        addFunction(new ReFunction());
-        addFunction(new RoundFunction());
+    addFunction(new AbsFunction());
+    addFunction(new ArgFunction());
+    addFunction(new ConFunction());
+    addFunction(new ImFunction());
+    addFunction(new InvFunction());
+    addFunction(new ReFunction());
+    addFunction(new RoundFunction());
 
-        addFunction(new RndFunction());
-        addFunction(new SetFunction());
+    addFunction(new RndFunction());
+    addFunction(new SetFunction());
 
-        addFunction(new AcosFunction());
-        addFunction(new AsinFunction());
-        addFunction(new AtanFunction());
-        addFunction(new CosFunction());
-        addFunction(new CtanFunction());
-        addFunction(new SinFunction());
-        addFunction(new TanFunction());
-    }
+    addFunction(new AcosFunction());
+    addFunction(new AsinFunction());
+    addFunction(new AtanFunction());
+    addFunction(new CosFunction());
+    addFunction(new CtanFunction());
+    addFunction(new SinFunction());
+    addFunction(new TanFunction());
+  }
 
-    public void addFunction(IFunction function) {
-        functions.put(function.getName().toUpperCase(), function);
-    }
+  public void addFunction(IFunction function) {
+    functions.put(function.getName().toUpperCase(), function);
+  }
 
-    public IFunction getFunction(String name) {
-        return functions.get(name.toUpperCase());
-    }
+  public IFunction getFunction(String name) {
+    return functions.get(name.toUpperCase());
+  }
 
-    public boolean hasFunction(String name) {
-        return functions.containsKey(name.toUpperCase());
-    }
+  public boolean hasFunction(String name) {
+    return functions.containsKey(name.toUpperCase());
+  }
 
 }

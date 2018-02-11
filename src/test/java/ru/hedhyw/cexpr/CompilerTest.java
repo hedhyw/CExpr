@@ -14,8 +14,22 @@ public class CompilerTest {
     @Test public void testComplexNumber() {
         Compiler compiler = new Compiler();
         Compiled compiled = compiler.compile("2.4+3.3i");
-        assertEquals(compiled.execute().getReal(), 2.4, EPS);
-        assertEquals(compiled.execute().getImaginary(), 3.3, EPS);
+        Complex res = compiled.execute();
+        assertEquals(2.4, res.getReal(), EPS);
+        assertEquals(3.3, res.getImaginary(), EPS);
+    }
+
+    @Test public void testOperators() {
+        Compiler compiler = new Compiler();
+        Compiled compiled = compiler.compile("10*22+10/(2^3)+11%10-1");
+        Complex res = compiled.execute();
+        assertEquals(10*22+10.0/(2*2*2)+11%10-1, res.getReal(), EPS);
+        assertEquals(0, res.getImaginary(), EPS);
+
+        compiled = compiler.compile("(2+2i)*4+(2+2i)^2-(16+16i)/2.0");
+        res = compiled.execute();
+        assertEquals(0, res.getReal(), EPS);
+        assertEquals(8, res.getImaginary(), EPS);
     }
 
     @Test public void testTrigonometricFunctions() {
