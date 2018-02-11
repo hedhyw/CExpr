@@ -126,7 +126,9 @@ public class ComplexUtils {
   }
 
   public static Complex random(Complex c) {
-    return new Complex(Math.random(), Math.random());
+    return new Complex(
+      Math.random() * c.getReal(),
+      Math.random() * c.getImaginary());
   }
 
   public static Complex sinh(Complex c) {

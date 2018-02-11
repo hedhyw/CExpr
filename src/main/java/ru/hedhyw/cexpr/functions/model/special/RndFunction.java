@@ -10,10 +10,7 @@ public class RndFunction implements IFunction {
   private static final boolean optimizable = false;
 
   public Complex eval(Complex arg) {
-    Complex rnd = ComplexUtils.random(arg);
-    return new Complex(
-      rnd.getReal() * arg.getReal(),
-      rnd.getImaginary() * arg.getImaginary());
+    return ComplexUtils.random(arg);
   }
 
   public String getName() {
